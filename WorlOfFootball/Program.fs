@@ -24,7 +24,7 @@ type Trainer (cash : int, name : string) =
     member this.Name = name
   end
 
-type FootballPlayers (pay : int, skill : int) = 
+type FootballPlayer (pay : int, skill : int) = 
   class
     inherit Football()
     let pay = pay
@@ -53,17 +53,17 @@ type Advocaat private() =
 type Hiddink private() = 
   inherit Trainer (30000000, "Hiddink")
   static let uniqueHiddink = Hiddink()
-  member this.IncreseSkill(that : FootballPlayers) = if that.Skill + 10 <= 100 then that.Skill + 10 else 100  
+  member this.IncreseSkill(that : FootballPlayer) = if that.Skill + 10 <= 100 then that.Skill + 10 else 100  
   static member Instance = uniqueHiddink
 
 type YoungLeague (pay : int, skill : int) = 
   class
-    inherit FootballPlayers (pay, skill)
+    inherit FootballPlayer (pay, skill)
     member this.InPremier = false
   end
 
-let Ronaldo = new FootballPlayers (3000000, 93)
-let Zhirkov = new FootballPlayers (1000000, 87)
+let Ronaldo = new FootballPlayer (3000000, 93)
+let Zhirkov = new FootballPlayer (1000000, 87)
 let Belyaev = new YoungLeague (30000, 56)
 
 printfn "%A" ((Hiddink.Instance).IncreseSkill (Ronaldo))
