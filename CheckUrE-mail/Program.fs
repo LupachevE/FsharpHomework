@@ -28,31 +28,31 @@ checkEmail "1@mail.ru"
 type Tests() = 
   
   [<Test>]
-  member this.``All 3 levels are short`` () = checkEmail "a@b.c" |> should be True
+  member this.``All 3 levels are short is correct`` () = checkEmail "a@b.cc" |> should be True
   
   [<Test>]
-  member this.``Standart e-mail`` () = checkEmail "victor.polozov@mail.ru" |> should be True
+  member this.``Standart e-mail is correct`` () = checkEmail "victor.polozov@mail.ru" |> should be True
   
   [<Test>]
-  member this.``1st level domain - info`` () = checkEmail "my@domain.info" |> should be True
+  member this.``1st level domain - info is correct`` () = checkEmail "my@domain.info" |> should be True
   
   [<Test>]
-  member this.``Starts with '_'`` () = checkEmail "_.1@mail.com" |> should be True
+  member this.``Starts with '_' is correct`` () = checkEmail "_.1@mail.com" |> should be True
   
   [<Test>]
-  member this.``Strange and long, but correct`` () = checkEmail "coins_department@hermitage.museum" |> should be True
+  member this.``Strange and long, but correct is correct`` () = checkEmail "coins_department@hermitage.museum" |> should be True
   
   [<Test>]
-  member this.``Too short 1st level domain`` () = checkEmail "a@b.c" |> should be False
+  member this.``Too short 1st level domain is wrong`` () = checkEmail "a@b.c" |> should be False
   
   [<Test>]
-  member this.``Double dot`` () = checkEmail "a..b@mail.ru" |> should be False
+  member this.``Double dot is wrong`` () = checkEmail "a..b@mail.ru" |> should be False
   
   [<Test>]
-  member this.``Wrong 1st level domain`` () = checkEmail "yo@domain.somedomain" |> should be False
+  member this.``Wrong 1st level domain is wrong`` () = checkEmail "yo@domain.somedomain" |> should be False
  
   [<Test>]
-  member this.``Starts with dot`` () = checkEmail ".a@mail.ru" |> should be False
+  member this.``Starts with dot is wrong`` () = checkEmail ".a@mail.ru" |> should be False
  
   [<Test>] 
-  member this.``Only number`` () = checkEmail "1@mail.ru" |> should be False
+  member this.``Only number is wrong`` () = checkEmail "1@mail.ru" |> should be False

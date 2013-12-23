@@ -37,6 +37,8 @@ let Mersedes = new Cars(1000000, "Mersedes", 500000)
 let mutable balance = 0
 let mutable (CurrentCar : Cars) = OnFeet  
 
+
+
 let buttonAudi = new Button(Text = "Buy Audi", Left = 10,
                               Top = 10, Width = 100, Enabled = false)
 let buttonToyota = new Button(Text = "Buy Toyota", Left = 10,
@@ -52,6 +54,17 @@ let buttonMitsubishi = new Button(Text = "Bu Mitsubishi", Left = 10,
 let buttonMersedes = new Button(Text = "Buy Mersedes", Left = 10,
                                   Top = 190, Width = 100, Enabled = false)
 
+let FactoryMethod(model : Cars) =
+  CurrentCar <- model
+  balance <- balance - model.Price
+  if balance < Audi.Price && not (CurrentCar <> Audi) then buttonAudi.Enabled <- false
+  if balance < Toyota.Price && not (CurrentCar <> Toyota) then buttonToyota.Enabled <- false
+  if balance < Honda.Price && not (CurrentCar <> Honda) then buttonHonda.Enabled <- false
+  if balance < Volkswagen.Price && not (CurrentCar <> Volkswagen) then buttonVolkswagen.Enabled <- false
+  if balance < Ford.Price && not (CurrentCar <> Ford) then buttonFord.Enabled <- false
+  if balance < Mitsubishi.Price && not (CurrentCar <> Mitsubishi) then buttonMitsubishi.Enabled <- false
+  if balance < Mersedes.Price && not (CurrentCar <> Mersedes) then buttonMersedes.Enabled <- false
+
 //Форма для покупки машины. Нажимаем на кнопку - покупаем машину, всё просто.
 
 let CarForm = 
@@ -60,64 +73,17 @@ let CarForm =
 
   let textBox = new TextBox(Text = "Congratulations! You win!", Top = 100, Left = 150)
 
-  let buttonPress1 _ _ = CurrentCar <- Audi
-                         balance <- balance - CurrentCar.Price
-                         if balance < Audi.Price && not (CurrentCar <> Audi) then buttonAudi.Enabled <- false
-                         if balance < Toyota.Price && not (CurrentCar <> Toyota) then buttonToyota.Enabled <- false
-                         if balance < Honda.Price && not (CurrentCar <> Honda) then buttonHonda.Enabled <- false
-                         if balance < Volkswagen.Price && not (CurrentCar <> Volkswagen) then buttonVolkswagen.Enabled <- false
-                         if balance < Ford.Price && not (CurrentCar <> Ford) then buttonFord.Enabled <- false
-                         if balance < Mitsubishi.Price && not (CurrentCar <> Mitsubishi) then buttonMitsubishi.Enabled <- false
-                         if balance < Mersedes.Price && not (CurrentCar <> Mersedes) then buttonMersedes.Enabled <- false
-  let buttonPress2 _ _ = CurrentCar <- Toyota
-                         balance <- balance - CurrentCar.Price
-                         if balance < Audi.Price && not (CurrentCar <> Audi) then buttonAudi.Enabled <- false
-                         if balance < Toyota.Price && not (CurrentCar <> Toyota) then buttonToyota.Enabled <- false
-                         if balance < Honda.Price && not (CurrentCar <> Honda) then buttonHonda.Enabled <- false
-                         if balance < Volkswagen.Price && not (CurrentCar <> Volkswagen) then buttonVolkswagen.Enabled <- false
-                         if balance < Ford.Price && not (CurrentCar <> Ford) then buttonFord.Enabled <- false
-                         if balance < Mitsubishi.Price && not (CurrentCar <> Mitsubishi) then buttonMitsubishi.Enabled <- false
-                         if balance < Mersedes.Price && not (CurrentCar <> Mersedes) then buttonMersedes.Enabled <- false
-  let buttonPress3 _ _ = CurrentCar <- Honda
-                         balance <- balance - CurrentCar.Price
-                         if balance < Audi.Price && not (CurrentCar <> Audi) then buttonAudi.Enabled <- false
-                         if balance < Toyota.Price && not (CurrentCar <> Toyota) then buttonToyota.Enabled <- false
-                         if balance < Honda.Price && not (CurrentCar <> Honda) then buttonHonda.Enabled <- false
-                         if balance < Volkswagen.Price && not (CurrentCar <> Volkswagen) then buttonVolkswagen.Enabled <- false
-                         if balance < Ford.Price && not (CurrentCar <> Ford) then buttonFord.Enabled <- false
-                         if balance < Mitsubishi.Price && not (CurrentCar <> Mitsubishi) then buttonMitsubishi.Enabled <- false
-                         if balance < Mersedes.Price && not (CurrentCar <> Mersedes) then buttonMersedes.Enabled <- false
-  let buttonPress4 _ _ = CurrentCar <- Volkswagen
-                         balance <- balance - CurrentCar.Price
-                         if balance < Audi.Price && not (CurrentCar <> Audi) then buttonAudi.Enabled <- false
-                         if balance < Toyota.Price && not (CurrentCar <> Toyota) then buttonToyota.Enabled <- false
-                         if balance < Honda.Price && not (CurrentCar <> Honda) then buttonHonda.Enabled <- false
-                         if balance < Volkswagen.Price && not (CurrentCar <> Volkswagen) then buttonVolkswagen.Enabled <- false
-                         if balance < Ford.Price && not (CurrentCar <> Ford) then buttonFord.Enabled <- false
-                         if balance < Mitsubishi.Price && not (CurrentCar <> Mitsubishi) then buttonMitsubishi.Enabled <- false
-                         if balance < Mersedes.Price && not (CurrentCar <> Mersedes) then buttonMersedes.Enabled <- false
-  let buttonPress5 _ _ = CurrentCar <- Ford
-                         balance <- balance - CurrentCar.Price
-                         if balance < Audi.Price && not (CurrentCar <> Audi) then buttonAudi.Enabled <- false
-                         if balance < Toyota.Price && not (CurrentCar <> Toyota) then buttonToyota.Enabled <- false
-                         if balance < Honda.Price && not (CurrentCar <> Honda) then buttonHonda.Enabled <- false
-                         if balance < Volkswagen.Price && not (CurrentCar <> Volkswagen) then buttonVolkswagen.Enabled <- false
-                         if balance < Ford.Price && not (CurrentCar <> Ford) then buttonFord.Enabled <- false
-                         if balance < Mitsubishi.Price && not (CurrentCar <> Mitsubishi) then buttonMitsubishi.Enabled <- false
-                         if balance < Mersedes.Price && not (CurrentCar <> Mersedes) then buttonMersedes.Enabled <- false
-  let buttonPress6 _ _ = CurrentCar <- Mitsubishi
-                         balance <- balance - CurrentCar.Price
-                         if balance < Audi.Price && not (CurrentCar <> Audi) then buttonAudi.Enabled <- false
-                         if balance < Toyota.Price && not (CurrentCar <> Toyota) then buttonToyota.Enabled <- false
-                         if balance < Honda.Price && not (CurrentCar <> Honda) then buttonHonda.Enabled <- false
-                         if balance < Volkswagen.Price && not (CurrentCar <> Volkswagen) then buttonVolkswagen.Enabled <- false
-                         if balance < Ford.Price && not (CurrentCar <> Ford) then buttonFord.Enabled <- false
-                         if balance < Mitsubishi.Price && not (CurrentCar <> Mitsubishi) then buttonMitsubishi.Enabled <- false
-                         if balance < Mersedes.Price && not (CurrentCar <> Mersedes) then buttonMersedes.Enabled <- false
-  let buttonPress7 _ _ = CurrentCar <- Mersedes
-                         balance <- balance - CurrentCar.Price
+  let buttonPress1 _ _ = FactoryMethod (Audi)
+  let buttonPress2 _ _ = FactoryMethod (Toyota)
+  let buttonPress3 _ _ = FactoryMethod (Honda)
+  let buttonPress4 _ _ = FactoryMethod (Volkswagen)
+  let buttonPress5 _ _ = FactoryMethod (Ford)
+  let buttonPress6 _ _ = FactoryMethod (Mitsubishi)
+  let buttonPress7 _ _ = FactoryMethod (Mersedes)
                          MessageBox.Show(textBox.Text) |> ignore
                          failwith "The game ends"
+
+  
 
   let eventHandler1 = new EventHandler(buttonPress1)
   let eventHandler2 = new EventHandler(buttonPress2)
@@ -126,6 +92,7 @@ let CarForm =
   let eventHandler5 = new EventHandler(buttonPress5)
   let eventHandler6 = new EventHandler(buttonPress6)
   let eventHandler7 = new EventHandler(buttonPress7)
+
   form.FormClosing |> Event.add (fun e -> form.Hide(); e.Cancel <- true)
   
   buttonAudi.Click.AddHandler(eventHandler1)
