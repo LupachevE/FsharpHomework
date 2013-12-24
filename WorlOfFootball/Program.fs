@@ -34,9 +34,6 @@ type FootballPlayer (pay : int, skill : int, age : int) =
 
 type StamfordBridge private() =
   inherit Stadium (2000000, 50000000, "London", false, true)
-
-  let mutable chosen = false
-
   static let uniqueBridge = StamfordBridge()
   member this.Action = "Get 2 free tickets, if you wear special costumes"
   static member Instance = uniqueBridge
@@ -70,8 +67,8 @@ let Belyaev = new YoungLeague (30000, 56, 16)
 let Draw() =
   let rand = new Random()
   match rand.Next(1) with
-  | 0 -> StamfordBridge.ChosenForChampionLeague <- true
-  | 1 -> FritzWalterStadion.ChosenForChampionLeague <- true
+  | 0 -> StamfordBridge.Instance.ChosenForChampionLeague <- true
+  | 1 -> FritzWalterStadion.Instance.ChosenForChampionLeague <- true
   | _ -> failwith "No more stadions"
 
 printfn "%A" ((Hiddink.Instance).battleCry (Ronaldo))
@@ -79,3 +76,4 @@ printfn "%A" (StamfordBridge.Instance).Price
 printfn "%A" (Advocaat.Instance).Name
 (Advocaat.Instance).SpendMoney(FritzWalterStadion.Instance) |> ignore
 printfn "%A" Belyaev.StudyAtSchool
+printfn "%A" StamfordBridge.Instance.ChosenForChampionLeague
