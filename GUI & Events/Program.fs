@@ -6,24 +6,11 @@ type Cars(price : int, model : string, earn : int) =
   
   let price = price
   let model = model
-//Функция draw пока с заглушками, на их месте должна быть отрисовка каждой модели по отдельности
-  (*let draw model =
-    match model with
-    | "Audi"       -> printfn "1"//drawAudi()
-    | "Toyota"     -> printfn "1"//drawToyota()
-    | "Honda"      -> printfn "1"//drawHonda()
-    | "Volkswagen" -> printfn "1"//drawVolkswagen()
-    | "Ford"       -> printfn "1"//drawFord()
-    | "Mitsubishi" -> printfn "1"//drawMitsubishi()
-    | "Mersedes"   -> printfn "1"//drawMersedes()
-    | _            -> failwith "Wrong car model"*)
 
   member this.Price = price
   member this.Earn = earn
   member this.Model = model
   member this.IsEnough(balance : int) = balance >= this.Price
-  //member this.Draw(model) = draw(this.Model)
-  
 
 let OnFeet = new Cars(0, "Foot", 100)
 let Audi = new Cars(1000, "Audi", 500)
@@ -73,35 +60,33 @@ let CarForm =
 
   let textBox = new TextBox(Text = "Congratulations! You win!", Top = 100, Left = 150)
 
-  let buttonPress1 _ _ = FactoryMethod (Audi)
-  let buttonPress2 _ _ = FactoryMethod (Toyota)
-  let buttonPress3 _ _ = FactoryMethod (Honda)
-  let buttonPress4 _ _ = FactoryMethod (Volkswagen)
-  let buttonPress5 _ _ = FactoryMethod (Ford)
-  let buttonPress6 _ _ = FactoryMethod (Mitsubishi)
-  let buttonPress7 _ _ = FactoryMethod (Mersedes)
-                         MessageBox.Show(textBox.Text) |> ignore
-                         failwith "The game ends"
+  let buttonPressAudi _ _       = FactoryMethod (Audi)
+  let buttonPressToyota _ _     = FactoryMethod (Toyota)
+  let buttonPressHonda _ _      = FactoryMethod (Honda)
+  let buttonPressVolkswagen _ _ = FactoryMethod (Volkswagen)
+  let buttonPressFord _ _       = FactoryMethod (Ford)
+  let buttonPressMitsubishi _ _ = FactoryMethod (Mitsubishi)
+  let buttonPressMersedes _ _   = FactoryMethod (Mersedes)
+                                  MessageBox.Show(textBox.Text) |> ignore
+                                  failwith "The game ends"
 
-  
-
-  let eventHandler1 = new EventHandler(buttonPress1)
-  let eventHandler2 = new EventHandler(buttonPress2)
-  let eventHandler3 = new EventHandler(buttonPress3)
-  let eventHandler4 = new EventHandler(buttonPress4)
-  let eventHandler5 = new EventHandler(buttonPress5)
-  let eventHandler6 = new EventHandler(buttonPress6)
-  let eventHandler7 = new EventHandler(buttonPress7)
+  let eventHandlerAudi       = new EventHandler(buttonPressAudi)
+  let eventHandlerToyota     = new EventHandler(buttonPressToyota)
+  let eventHandlerHonda      = new EventHandler(buttonPressHonda)
+  let eventHandlerVolkswagen = new EventHandler(buttonPressVolkswagen)
+  let eventHandlerFord       = new EventHandler(buttonPressFord)
+  let eventHandlerMitsubishi = new EventHandler(buttonPressMitsubishi)
+  let eventHandlerMersedes   = new EventHandler(buttonPressMersedes)
 
   form.FormClosing |> Event.add (fun e -> form.Hide(); e.Cancel <- true)
   
-  buttonAudi.Click.AddHandler(eventHandler1)
-  buttonToyota.Click.AddHandler(eventHandler2) 
-  buttonHonda.Click.AddHandler(eventHandler3)
-  buttonVolkswagen.Click.AddHandler(eventHandler4)
-  buttonFord.Click.AddHandler(eventHandler5)
-  buttonMitsubishi.Click.AddHandler(eventHandler6)
-  buttonMersedes.Click.AddHandler(eventHandler7)
+  buttonAudi.Click.AddHandler(eventHandlerAudi)
+  buttonToyota.Click.AddHandler(eventHandlerToyota) 
+  buttonHonda.Click.AddHandler(eventHandlerHonda)
+  buttonVolkswagen.Click.AddHandler(eventHandlerVolkswagen)
+  buttonFord.Click.AddHandler(eventHandlerFord)
+  buttonMitsubishi.Click.AddHandler(eventHandlerMitsubishi)
+  buttonMersedes.Click.AddHandler(eventHandlerMersedes)
 
   let dc c = (c :> Control)
 
@@ -118,7 +103,7 @@ let LuckyForm =
   let button = new Button(Text = "Press it!", Left = 40,
                             Top = 20, Width = 80, Enabled = true)
 
-  let buttonPress1 _ _ = 
+  let MainbuttonPress _ _ = 
         match rand.Next(8) with
         | 0 -> CurrentCar <- Audi
         | 1 -> CurrentCar <- Toyota
@@ -134,9 +119,9 @@ let LuckyForm =
 
   form.FormClosing |> Event.add (fun e -> form.Hide(); e.Cancel <- true)
 
-  let eventHandler1 = new EventHandler(buttonPress1)
+  let MaineventHandler = new EventHandler(MainbuttonPress)
 
-  button.Click.AddHandler(eventHandler1)
+  button.Click.AddHandler(MaineventHandler)
 
   let dc c = (c :> Control)
 
@@ -164,31 +149,31 @@ let mainForm =
                                  Top = 10, Width = 100, Enabled = true)
     let oneMoreButton = new Button(Text = "Your car", Left = 150,
                                  Top = 100, Width = 100, Enabled = true)                                                                                         
-    let buttonPress1 _ _ = CarForm.Show()
-    let buttonPress2 _ _ = LuckyForm.Show()
-    let buttonPress3 _ _ = balance <- balance + CurrentCar.Earn
-                           textBox.Text <- balance.ToString()
-                           MessageBox.Show(textBox.Text) |> ignore
-                           if balance >= Audi.Price && CurrentCar <> Audi then buttonAudi.Enabled <- true
-                           if balance >= Toyota.Price && CurrentCar <> Toyota then buttonToyota.Enabled <- true
-                           if balance >= Honda.Price && CurrentCar <> Honda then buttonHonda.Enabled <- true
-                           if balance >= Volkswagen.Price && CurrentCar <> Volkswagen then buttonVolkswagen.Enabled <- true
-                           if balance >= Ford.Price && CurrentCar <> Ford then buttonFord.Enabled <- true
-                           if balance >= Mitsubishi.Price && CurrentCar <> Mitsubishi then buttonMitsubishi.Enabled <- true
-                           if balance >= Mersedes.Price && CurrentCar <> Mersedes then buttonMersedes.Enabled <- true
-    let buttonPress4 _ _ = textBox2.Text <- CurrentCar.Model
-                           MessageBox.Show(textBox2.Text) |> ignore
+    let ChooseCarbuttonPress _ _ = CarForm.Show()
+    let LuckyFormbuttonPress _ _ = LuckyForm.Show()
+    let GetMoneybuttonPress _ _  = balance <- balance + CurrentCar.Earn
+                                   textBox.Text <- balance.ToString()
+                                   MessageBox.Show(textBox.Text) |> ignore
+                                   if balance >= Audi.Price && CurrentCar <> Audi then buttonAudi.Enabled <- true
+                                   if balance >= Toyota.Price && CurrentCar <> Toyota then buttonToyota.Enabled <- true
+                                   if balance >= Honda.Price && CurrentCar <> Honda then buttonHonda.Enabled <- true
+                                   if balance >= Volkswagen.Price && CurrentCar <> Volkswagen then buttonVolkswagen.Enabled <- true
+                                   if balance >= Ford.Price && CurrentCar <> Ford then buttonFord.Enabled <- true
+                                   if balance >= Mitsubishi.Price && CurrentCar <> Mitsubishi then buttonMitsubishi.Enabled <- true
+                                   if balance >= Mersedes.Price && CurrentCar <> Mersedes then buttonMersedes.Enabled <- true
+    let ShowCarbuttonPress _ _   = textBox2.Text <- CurrentCar.Model
+                                   MessageBox.Show(textBox2.Text) |> ignore
 
 
-    let eventHandler1 = new EventHandler(buttonPress1)
-    let eventHandler2 = new EventHandler(buttonPress2)
-    let eventHandler3 = new EventHandler(buttonPress3)
-    let eventHandler4 = new EventHandler(buttonPress4)
+    let ChooseCareventHandler = new EventHandler(ChooseCarbuttonPress)
+    let LuckyFormeventHandler = new EventHandler(LuckyFormbuttonPress)
+    let GetMoneyeventHandler  = new EventHandler(GetMoneybuttonPress)
+    let ShowCareventHandler   = new EventHandler(ShowCarbuttonPress)
 
-    firstbutton.Click.AddHandler(eventHandler1)
-    secondbutton.Click.AddHandler(eventHandler2) 
-    thirdbutton.Click.AddHandler(eventHandler3)
-    oneMoreButton.Click.AddHandler(eventHandler4)
+    firstbutton.Click.AddHandler(ChooseCareventHandler)
+    secondbutton.Click.AddHandler(LuckyFormeventHandler) 
+    thirdbutton.Click.AddHandler(GetMoneyeventHandler)
+    oneMoreButton.Click.AddHandler(ShowCareventHandler)
 
     let dc c = (c :> Control)
 
