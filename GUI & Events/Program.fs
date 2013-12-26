@@ -1,6 +1,6 @@
 ﻿open System
 open System.Windows.Forms
-open System.Drawing
+open System.Collections.Generic
 
 type Cars(price : int, model : string, earn : int) =
   
@@ -12,45 +12,20 @@ type Cars(price : int, model : string, earn : int) =
   member this.Model = model
   member this.IsEnough(balance : int) = balance >= this.Price
 
-let OnFeet = new Cars(0, "Foot", 100)
-let Audi = new Cars(1000, "Audi", 500)
-let Toyota = new Cars(5000, "Toyota", 1000)
-let Honda = new Cars(15000, "Honda", 3000)
-let Volkswagen = new Cars(30000, "VolksWagen", 10000)
-let Ford = new Cars(100000, "Ford", 25000)
-let Mitsubishi = new Cars(300000, "Mitsubishi", 100000)
-let Mersedes = new Cars(1000000, "Mersedes", 500000)
+let CarsArray = [|new Cars(0, "Foot", 100); new Cars(1000, "Audi", 500); new Cars(5000, "Toyota", 1000); new Cars(15000, "Honda", 3000); new Cars(30000, "VolksWagen", 10000); new Cars(100000, "Ford", 25000); new Cars(300000, "Mitsubishi", 100000); new Cars(1000000, "Mersedes", 500000)|]
 
 let mutable balance = 0
-let mutable (CurrentCar : Cars) = OnFeet  
+let mutable (CurrentCar : Cars) = CarsArray.[0]  
 
 
+let buttonArray = [|for i in 0..(CarsArray.Length - 1) -> new Button(Text = "Buy " + CarsArray.[i].Model, Left = 10, Top = 10 + i * 30, Width = 100, Enabled = false)|]
 
-let buttonAudi = new Button(Text = "Buy Audi", Left = 10,
-                              Top = 10, Width = 100, Enabled = false)
-let buttonToyota = new Button(Text = "Buy Toyota", Left = 10,
-                                Top = 40, Width = 100, Enabled = false)
-let buttonHonda = new Button(Text = "Buy Honda", Left = 10,
-                               Top = 70, Width = 100, Enabled = false)
-let buttonVolkswagen = new Button(Text = "Buy Volkswagen", Left = 10,
-                                    Top = 100, Width = 100, Enabled = false)
-let buttonFord = new Button(Text = "Buy Ford", Left = 10,
-                              Top = 130, Width = 100, Enabled = false)
-let buttonMitsubishi = new Button(Text = "Bu Mitsubishi", Left = 10,
-                                    Top = 160, Width = 100, Enabled = false)
-let buttonMersedes = new Button(Text = "Buy Mersedes", Left = 10,
-                                  Top = 190, Width = 100, Enabled = false)
-
-let FactoryMethod(model : Cars) =
-  CurrentCar <- model
-  balance <- balance - model.Price
-  if balance < Audi.Price && not (CurrentCar <> Audi) then buttonAudi.Enabled <- false
-  if balance < Toyota.Price && not (CurrentCar <> Toyota) then buttonToyota.Enabled <- false
-  if balance < Honda.Price && not (CurrentCar <> Honda) then buttonHonda.Enabled <- false
-  if balance < Volkswagen.Price && not (CurrentCar <> Volkswagen) then buttonVolkswagen.Enabled <- false
-  if balance < Ford.Price && not (CurrentCar <> Ford) then buttonFord.Enabled <- false
-  if balance < Mitsubishi.Price && not (CurrentCar <> Mitsubishi) then buttonMitsubishi.Enabled <- false
-  if balance < Mersedes.Price && not (CurrentCar <> Mersedes) then buttonMersedes.Enabled <- false
+let FactoryMethod(carsArray : Cars array, buttonArray : Button array, carNumber : int) =
+  
+  for i in 1..(carsArray.Length - 1) do
+    if balance < carsArray.[i].Price || not (CurrentCar <> carsArray.[i]) then buttonArray.[i - 1].Enabled <- false
+  CurrentCar <- carsArray.[carNumber]
+  balance <- balance - carsArray.[carNumber].Price
 
 //Форма для покупки машины. Нажимаем на кнопку - покупаем машину, всё просто.
 
@@ -60,37 +35,21 @@ let CarForm =
 
   let textBox = new TextBox(Text = "Congratulations! You win!", Top = 100, Left = 150)
 
-  let buttonPressAudi _ _       = FactoryMethod (Audi)
-  let buttonPressToyota _ _     = FactoryMethod (Toyota)
-  let buttonPressHonda _ _      = FactoryMethod (Honda)
-  let buttonPressVolkswagen _ _ = FactoryMethod (Volkswagen)
-  let buttonPressFord _ _       = FactoryMethod (Ford)
-  let buttonPressMitsubishi _ _ = FactoryMethod (Mitsubishi)
-  let buttonPressMersedes _ _   = FactoryMethod (Mersedes)
-                                  MessageBox.Show(textBox.Text) |> ignore
-                                  failwith "The game ends"
+  let buttonPressArray = [|for i in 0..CarsArray.Length - 2 -> fun (o:Object) (e : EventArgs) -> FactoryMethod(CarsArray, buttonArray, i)
+                                                                                                 if CurrentCar = CarsArray.[7] then MessageBox.Show(textBox.Text) |> ignore
+                                                                                                                                    failwith "The game ends"
+                         |]
 
-  let eventHandlerAudi       = new EventHandler(buttonPressAudi)
-  let eventHandlerToyota     = new EventHandler(buttonPressToyota)
-  let eventHandlerHonda      = new EventHandler(buttonPressHonda)
-  let eventHandlerVolkswagen = new EventHandler(buttonPressVolkswagen)
-  let eventHandlerFord       = new EventHandler(buttonPressFord)
-  let eventHandlerMitsubishi = new EventHandler(buttonPressMitsubishi)
-  let eventHandlerMersedes   = new EventHandler(buttonPressMersedes)
-
-  form.FormClosing |> Event.add (fun e -> form.Hide(); e.Cancel <- true)
+  let handlersArray = [|for i in 0..CarsArray.Length - 2 -> new EventHandler(buttonPressArray.[i])|]
   
-  buttonAudi.Click.AddHandler(eventHandlerAudi)
-  buttonToyota.Click.AddHandler(eventHandlerToyota) 
-  buttonHonda.Click.AddHandler(eventHandlerHonda)
-  buttonVolkswagen.Click.AddHandler(eventHandlerVolkswagen)
-  buttonFord.Click.AddHandler(eventHandlerFord)
-  buttonMitsubishi.Click.AddHandler(eventHandlerMitsubishi)
-  buttonMersedes.Click.AddHandler(eventHandlerMersedes)
+  for i in 1..CarsArray.Length - 2 do
+    buttonArray.[i].Click.AddHandler(handlersArray.[i])
 
   let dc c = (c :> Control)
 
-  form.Controls.AddRange([| dc buttonAudi; dc buttonToyota; dc buttonHonda; dc buttonVolkswagen; dc buttonFord; dc buttonMitsubishi; dc buttonMersedes|])
+  form.Controls.AddRange([|for i in 1..CarsArray.Length - 1 -> dc buttonArray.[i]|])
+
+  form.FormClosing |> Event.add (fun e -> form.Hide(); e.Cancel <- true)
 
   form
 
@@ -105,15 +64,15 @@ let LuckyForm =
 
   let MainbuttonPress _ _ = 
         match rand.Next(8) with
-        | 0 -> CurrentCar <- Audi
-        | 1 -> CurrentCar <- Toyota
-        | 2 -> CurrentCar <- Honda
-        | 3 -> CurrentCar <- Volkswagen
-        | 4 -> CurrentCar <- Ford
-        | 5 -> CurrentCar <- OnFeet
-        | 6 -> CurrentCar <- OnFeet
-        | 7 -> CurrentCar <- OnFeet
-        | 8 -> CurrentCar <- OnFeet
+        | 0 -> CurrentCar <- CarsArray.[1]
+        | 1 -> CurrentCar <- CarsArray.[2]
+        | 2 -> CurrentCar <- CarsArray.[3]
+        | 3 -> CurrentCar <- CarsArray.[4]
+        | 4 -> CurrentCar <- CarsArray.[5]
+        | 5 -> CurrentCar <- CarsArray.[1]
+        | 6 -> CurrentCar <- CarsArray.[1]
+        | 7 -> CurrentCar <- CarsArray.[1]
+        | 8 -> CurrentCar <- CarsArray.[1]
         | _ -> failwith "WrongCar"
         MessageBox.Show(CurrentCar.Model) |> ignore
 
@@ -154,13 +113,8 @@ let mainForm =
     let GetMoneybuttonPress _ _  = balance <- balance + CurrentCar.Earn
                                    textBox.Text <- balance.ToString()
                                    MessageBox.Show(textBox.Text) |> ignore
-                                   if balance >= Audi.Price && CurrentCar <> Audi then buttonAudi.Enabled <- true
-                                   if balance >= Toyota.Price && CurrentCar <> Toyota then buttonToyota.Enabled <- true
-                                   if balance >= Honda.Price && CurrentCar <> Honda then buttonHonda.Enabled <- true
-                                   if balance >= Volkswagen.Price && CurrentCar <> Volkswagen then buttonVolkswagen.Enabled <- true
-                                   if balance >= Ford.Price && CurrentCar <> Ford then buttonFord.Enabled <- true
-                                   if balance >= Mitsubishi.Price && CurrentCar <> Mitsubishi then buttonMitsubishi.Enabled <- true
-                                   if balance >= Mersedes.Price && CurrentCar <> Mersedes then buttonMersedes.Enabled <- true
+                                   for i in 1..CarsArray.Length - 1 do if balance >= CarsArray.[i].Price && CurrentCar <> CarsArray.[i] then buttonArray.[i].Enabled <- true
+
     let ShowCarbuttonPress _ _   = textBox2.Text <- CurrentCar.Model
                                    MessageBox.Show(textBox2.Text) |> ignore
 
