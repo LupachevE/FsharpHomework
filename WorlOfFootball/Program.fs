@@ -59,39 +59,31 @@ type YoungLeague (pay : int, skill : int, age : int) =
     inherit FootballPlayer (pay, skill, age)
     member this.StudyAtSchool = not (age >= 18)
 
-//Создание массива стадионов для жеребьёвки
-
 let numberSt = 8
 let mutable StadiumArray = [|for i in 1..numberSt -> new Stadium(i * 10, i * 20, false, false, ("Stadium number " + i.ToString()))|]
-
-//Некоторое взаимодействие классов
 
 let Ronaldo = new FootballPlayer (3000000, 93, 38)
 let Zhirkov = new FootballPlayer (1000000, 87, 35)
 let Belyaev = new YoungLeague (30000, 56, 16)
 
-//Описание жеребьёвки
+let chosenStadium = (new Random()).Next(1, numberSt)
 
-let Draw(array : Stadium array) = 
+let Draw(array : Stadium array) =
 
-    let chosenStadium = (new Random()).Next(1, numberSt)
-
-    for i in 1..numberSt do 
-        if chosenStadium = i then StadiumArray.[i].ChosenForPremierLeague <- true
+  for i in 1..numberSt do
+    if chosenStadium = i then StadiumArray.[i].ChosenForPremierLeague <- true
   (*match rand.Next(8) with
   | 0 -> StamfordBridge.Instance.ChosenForChampionLeague <- true
   | 1 -> FritzWalterStadion.Instance.ChosenForChampionLeague <- true
   | _ -> failwith "No more stadions"*)
 
-//Некоторые взаимодействия классов, включая проведение жеребьёвки
 
-Draw(StadiumArray)
-(Hiddink.Instance).battleCry (Ronaldo) |> ignore
-(Advocaat.Instance).SpendMoney(FritzWalterStadion.Instance) |> ignore
 
-//Вывод результатов
-
+printfn "%A" ((Hiddink.Instance).battleCry (Ronaldo))
 printfn "%A" (StamfordBridge.Instance).Price
 printfn "%A" (Advocaat.Instance).Name
-printfn "Belyaev.StudyAtSchool is %A" Belyaev.StudyAtSchool
+(Advocaat.Instance).SpendMoney(FritzWalterStadion.Instance) |> ignore
+if Belyaev.StudyAtSchool then printfn "Беляев учится в школе" else printfn "Беляев не учится в школе"
+Draw(StadiumArray)
+printfn (if StadiumArray.[2].ChosenForPremierLeague then "true" else "false")
 printfn "%A" <| (Array.Find(StadiumArray, fun x -> x.ChosenForPremierLeague = true)).Name + " is a winner!"
