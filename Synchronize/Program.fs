@@ -1,8 +1,8 @@
 ﻿open System
 
 let processes = 5
-
-let timeProcesses = [|for i in 0..processes - 1 -> (new Random()).Next(1,10000)|]
+let rand = new Random()
+let timeProcesses = [|for i in 0..processes - 1 -> rand.Next(10000)|]
 
 let stateArray = [|for i in 0..processes - 1 -> false|]
 
@@ -25,5 +25,7 @@ let asyncProcess i =
     }
 
 let asyncProcesses = [for i in 0..processes - 1 -> asyncProcess i]
+
+for i in 0..processes - 1 do printfn "Process number %A works %A seconds" (i + 1) timeProcesses.[i]
 
 asyncProcesses |> Async.Parallel |> Async.RunSynchronously |> ignore
