@@ -9,25 +9,26 @@ type WebCrawler() =
     let link = "(?:href|src)=\"((?:https?://)?[a-zA-Z0-9_./-]+)\""
     let picEndsWith = "\.(?:jpeg|jpg|gif|png)$"
     let host = "^https?://[a-zA-Z0-9_.-]+/"
-
+    let regEnds = new Regex(picEndsWith)
 
     let picturesLoaded = new ConcurrentDictionary<string, unit>()
     let attendedLinks = new ConcurrentDictionary<string, unit>()
 
     let filterLinks link = Array.filter (fun (s : string) -> s.StartsWith link && 
-                                                             not ((new Regex(picEndsWith)).IsMatch(s)) &&
+                                                             not (regEnds.IsMatch(s)) &&
                                                              not (attendedLinks.ContainsKey(s))
                                         )
 
-    let filterPicLinks = Array.filter (fun (s : string) -> (new Regex(picEndsWith)).IsMatch(s) && 
+    let filterPicLinks = Array.filter (fun (s : string) -> regEnds.IsMatch(s) && 
                                                            not (picturesLoaded.ContainsKey(s))
                                       )
 
     member this.getHtml link =
+      let wc = new WebClient()
       async { 
         try
             let uri       = new System.Uri(link)
-            let! html     = (new WebClient()).AsyncDownloadString(uri)
+            let! html     = wc.AsyncDownloadString(uri)
             return html
             with _ -> return ""
             }
@@ -36,15 +37,16 @@ type WebCrawler() =
       async {
             try picturesLoaded.GetOrAdd(link, ())
                 let uri = new Uri(link)
-                //let fileName = link.GetHashCode().ToString() + (new Regex(picEndsWith)).Match(link).Value
-                (new WebClient()).DownloadFileAsync(uri, "C:\Pictures")
+                let fileName = link.GetHashCode().ToString() + (new Regex(picEndsWith)).Match(link).Value
+                (new WebClient()).DownloadFileAsync(uri, fileName)
             with
-            |error -> error.Message |> printf "%s"
+            |error -> error.Message |> printf "%s with problem"
             }
             
     member this.getLinks host html =
+      let linkReg = new Regex(link)
       async {
-        try let matches = (new Regex(link)).Matches(html)
+        try let matches = linkReg.Matches(html)
             let links = [|for i in matches -> i.Groups.[1].Value|]
             return Array.map (fun (s : string) -> if (s.StartsWith("http")) then s 
                                                   elif (s.StartsWith("/")) then host + s.Remove(0, 1)
@@ -54,7 +56,8 @@ type WebCrawler() =
             }
 
     member this.Start link = 
-      let host = (new Regex(host)).Match(link).Value
+      let hostReg = new Regex(host)
+      let host = hostReg.Match(link).Value
       let rec crawler link =
         async {
               try attendedLinks.GetOrAdd(link, ())
