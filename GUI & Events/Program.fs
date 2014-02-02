@@ -64,15 +64,15 @@ let LuckyForm =
 
   let MainbuttonPress _ _ = 
         match rand.Next(8) with
-        | 0 -> CurrentCar <- CarsArray.[1]
-        | 1 -> CurrentCar <- CarsArray.[2]
-        | 2 -> CurrentCar <- CarsArray.[3]
-        | 3 -> CurrentCar <- CarsArray.[4]
-        | 4 -> CurrentCar <- CarsArray.[5]
-        | 5 -> CurrentCar <- CarsArray.[1]
-        | 6 -> CurrentCar <- CarsArray.[1]
-        | 7 -> CurrentCar <- CarsArray.[1]
-        | 8 -> CurrentCar <- CarsArray.[1]
+        | 0 -> CurrentCar <- CarsArray.[0]
+        | 1 -> CurrentCar <- CarsArray.[1]
+        | 2 -> CurrentCar <- CarsArray.[2]
+        | 3 -> CurrentCar <- CarsArray.[3]
+        | 4 -> CurrentCar <- CarsArray.[4]
+        | 5 -> CurrentCar <- CarsArray.[5]
+        | 6 -> CurrentCar <- CarsArray.[0]
+        | 7 -> CurrentCar <- CarsArray.[0]
+        | 8 -> CurrentCar <- CarsArray.[0]
         | _ -> failwith "WrongCar"
         MessageBox.Show(CurrentCar.Model) |> ignore
 
@@ -95,28 +95,28 @@ let mainForm =
 
     let form = new Form(Text = "Cars&Money")
 
-    let textBox = new TextBox(Text = balance.ToString(),
+    let yourBalance = new TextBox(Text = balance.ToString(),
                             Top = 100, Left = 150)
-    let textBox2 = new TextBox(Text = CurrentCar.Model,
+    let yourCar = new TextBox(Text = CurrentCar.Model,
                             Top = 100, Left = 150)
 
-    let firstbutton = new Button(Text = "ChooseYourCar", Left = 10,
+    let chooseCarButton = new Button(Text = "ChooseYourCar", Left = 10,
                                  Top = 10, Width = 100, Enabled = true)
-    let secondbutton = new Button(Text = "TestYourLuck", Left = 10,
+    let yourLuckButton = new Button(Text = "TestYourLuck", Left = 10,
                                   Top = 100, Width = 100, Enabled = true)
-    let thirdbutton = new Button(Text = "Earn your money", Left = 150,
+    let earnYourMoneyButton = new Button(Text = "Earn your money", Left = 150,
                                  Top = 10, Width = 100, Enabled = true)
-    let oneMoreButton = new Button(Text = "Your car", Left = 150,
+    let yourCarButton = new Button(Text = "Your car", Left = 150,
                                  Top = 100, Width = 100, Enabled = true)                                                                                         
     let ChooseCarbuttonPress _ _ = CarForm.Show()
     let LuckyFormbuttonPress _ _ = LuckyForm.Show()
     let GetMoneybuttonPress _ _  = balance <- balance + CurrentCar.Earn
-                                   textBox.Text <- balance.ToString()
-                                   MessageBox.Show(textBox.Text) |> ignore
+                                   yourBalance.Text <- balance.ToString()
+                                   MessageBox.Show(yourBalance.Text) |> ignore
                                    for i in 1..CarsArray.Length - 1 do if balance >= CarsArray.[i].Price && CurrentCar <> CarsArray.[i] then buttonArray.[i].Enabled <- true
 
-    let ShowCarbuttonPress _ _   = textBox2.Text <- CurrentCar.Model
-                                   MessageBox.Show(textBox2.Text) |> ignore
+    let ShowCarbuttonPress _ _   = yourCar.Text <- CurrentCar.Model
+                                   MessageBox.Show(yourCar.Text) |> ignore
 
 
     let ChooseCareventHandler = new EventHandler(ChooseCarbuttonPress)
@@ -124,14 +124,14 @@ let mainForm =
     let GetMoneyeventHandler  = new EventHandler(GetMoneybuttonPress)
     let ShowCareventHandler   = new EventHandler(ShowCarbuttonPress)
 
-    firstbutton.Click.AddHandler(ChooseCareventHandler)
-    secondbutton.Click.AddHandler(LuckyFormeventHandler) 
-    thirdbutton.Click.AddHandler(GetMoneyeventHandler)
-    oneMoreButton.Click.AddHandler(ShowCareventHandler)
+    chooseCarButton.Click.AddHandler(ChooseCareventHandler)
+    yourLuckButton.Click.AddHandler(LuckyFormeventHandler) 
+    earnYourMoneyButton.Click.AddHandler(GetMoneyeventHandler)
+    yourCarButton.Click.AddHandler(ShowCareventHandler)
 
     let dc c = (c :> Control)
 
-    form.Controls.AddRange([| dc firstbutton; dc secondbutton; dc thirdbutton; dc oneMoreButton|])
+    form.Controls.AddRange([| dc chooseCarButton; dc yourLuckButton; dc earnYourMoneyButton; dc yourCarButton|])
 
     form
 
