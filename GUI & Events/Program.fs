@@ -20,7 +20,7 @@ let mutable (CurrentCar : Cars) = CarsArray.[0]
 
 let buttonArray = [|for i in 0..(CarsArray.Length - 1) -> new Button(Text = "Buy " + CarsArray.[i].Model, Left = 10, Top = 10 + i * 30, Width = 100, Enabled = false)|]
 
-let FactoryMethod(carsArray : Cars array, buttonArray : Button array, carNumber : int) =
+let WorkWithButtonsEnabledAndBalance(carsArray : Cars array, buttonArray : Button array, carNumber : int) =
   
   for i in 1..(carsArray.Length - 1) do
     if balance < carsArray.[i].Price || not (CurrentCar <> carsArray.[i]) then buttonArray.[i - 1].Enabled <- false
@@ -35,7 +35,7 @@ let CarForm =
 
   let textBox = new TextBox(Text = "Congratulations! You win!", Top = 100, Left = 150)
 
-  let buttonPressArray = [|for i in 0..CarsArray.Length - 2 -> fun (o:Object) (e : EventArgs) -> FactoryMethod(CarsArray, buttonArray, i)
+  let buttonPressArray = [|for i in 0..CarsArray.Length - 2 -> fun (o:Object) (e : EventArgs) -> WorkWithButtonsEnabledAndBalance(CarsArray, buttonArray, i)
                                                                                                  if CurrentCar = CarsArray.[7] then MessageBox.Show(textBox.Text) |> ignore
                                                                                                                                     failwith "The game ends"
                          |]
