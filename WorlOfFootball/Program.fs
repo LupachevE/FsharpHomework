@@ -9,7 +9,7 @@ type Stadium (price : int, count : int, hd : bool, cover : bool, name : string) 
     let mutable chosen = false
 
     member this.Name = name
-    member this.Price = price
+    member this.Price = if price < 0 then failwith "Price out of range" else price
     member this.Number = count
     member this.HotDogs = hd
     member this.IsCovered = cover
@@ -20,17 +20,24 @@ type Stadium (price : int, count : int, hd : bool, cover : bool, name : string) 
 type Trainer (cash : int, name : string) =
     let mutable cash = cash
     member this.SpendMoney(that : Stadium) = 
-        cash <- cash - that.Price
+        if cash - that.Price < 0 then printf "Not enough money" else cash <- cash - that.Price
         printfn "Curretn balance : %A"
     member this.ShowBalance = printfn "%A" cash
     member this.Name = name
 
-type FootballPlayer (pay : int, skill : int, age : int) = 
-    let pay = pay
+type League (name : string, coef : float) =
+    member this.Name = name
+    member this.Coef = coef
+
+type FootballPlayer (pay : float, skill : int, age : int) = 
     let mutable skill = skill
+    let mutable currleague = new League("", 0.0)
+    member this.WhatLeague(league : League) = currleague <- league 
     member this.InNation = false
-    member this.Skill = skill 
-    member this.Age = age
+    member this.Skill = if skill < 0 || skill > 100 then failwith "Skill out of range" else skill 
+    member this.Pay = pay * currleague.Coef
+    member this.ShowSalary = printfn "Current salary : %A" this.Pay
+    member this.Age = if age < 0 then failwith "Age out of range" else age
 
 type StamfordBridge private() =
   inherit Stadium (2000000, 50000000, false, true, "StamfordBridge")
@@ -55,16 +62,17 @@ type Hiddink private() =
   member this.battleCry(that : FootballPlayer) = if that.Skill + 10 <= 100 then that.Skill + 10 else 100  
   static member Instance = uniqueHiddink
 
-type YoungLeague (pay : int, skill : int, age : int) = 
+type YoungFootballers (pay : float, skill : int, age : int) = 
     inherit FootballPlayer (pay, skill, age)
     member this.StudyAtSchool = not (age >= 18)
 
 let numberSt = 8
 let mutable StadiumArray = [|for i in 1..numberSt -> new Stadium(i * 10, i * 20, false, false, ("Stadium number " + i.ToString()))|]
 
-let Ronaldo = new FootballPlayer (3000000, 93, 38)
-let Zhirkov = new FootballPlayer (1000000, 87, 35)
-let Belyaev = new YoungLeague (30000, 56, 16)
+let Ronaldo = new FootballPlayer (3000000.0, 93, 38)
+let Zhirkov = new FootballPlayer (1000000.0, 87, 35)
+let Belyaev = new YoungFootballers (30000.0, 56, 16)
+let league1 = new League("YoungLeague", 0.4)
 
 let chosenStadium = (new Random()).Next(1, numberSt)
 
@@ -72,12 +80,6 @@ let Draw(array : Stadium array) =
 
   for i in 1..numberSt do
     if chosenStadium = i then StadiumArray.[i].ChosenForPremierLeague <- true
-  (*match rand.Next(8) with
-  | 0 -> StamfordBridge.Instance.ChosenForChampionLeague <- true
-  | 1 -> FritzWalterStadion.Instance.ChosenForChampionLeague <- true
-  | _ -> failwith "No more stadions"*)
-
-
 
 printfn "%A" ((Hiddink.Instance).battleCry (Ronaldo))
 printfn "%A" (StamfordBridge.Instance).Price
@@ -87,3 +89,6 @@ if Belyaev.StudyAtSchool then printfn "Беляев учится в школе" 
 Draw(StadiumArray)
 printfn (if StadiumArray.[2].ChosenForPremierLeague then "true" else "false")
 printfn "%A" <| (Array.Find(StadiumArray, fun x -> x.ChosenForPremierLeague = true)).Name + " is a winner!"
+Belyaev.ShowSalary
+Belyaev.WhatLeague(league1)
+Belyaev.ShowSalary
